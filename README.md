@@ -62,7 +62,8 @@ etcdctl txn -i //从标准库读取多个请求，看作一个原子性的事务
  value("user") = "frank" #此命令是比较 user 的值与 frank 是否相等
  put result ok  #成功的条件
  put result failed #失败的条件
-
+ 
+ etcdctl get result
 
 ```
 

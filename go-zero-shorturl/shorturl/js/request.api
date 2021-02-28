@@ -1,0 +1,16 @@
+type (
+  greetReq struct {
+    msg string `form:"msg"`
+  }
+
+  greetResp struct {
+    reply string `json:"reply"`
+  }
+)
+
+service request-api {
+  @server(
+    handler: ApiHandler
+  )
+  get /shorten(greetReq) returns(greetResp)
+}
