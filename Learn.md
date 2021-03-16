@@ -1,5 +1,7 @@
 # 这里想想分享的内容
 
+## 一个短链接服务的demo 
+
 ### stage1
 
 1. goctl 声明API
@@ -70,7 +72,7 @@ etcdctl get transform.rpc --prefix
 6. 增加数据库的调用
 
 ```shell
-# -c 表示使用redis cache
+# -c 表示使用redis cache, ddl data define language
 goctl model mysql ddl -c -src shorturl.sql -dir .
 ```
 
@@ -85,8 +87,33 @@ goctl model mysql ddl -c -src shorturl.sql -dir .
     * svc 里面的 context 修改   // l.svcCtx.Model.Insert
     * logic 逻辑更新
 
-### stage4 补充一个生成ts 的 request 的代码
+## goctl 补充
 
+  goctl 新增plugin
+
+## goctl docker
+
+```shell
+goctl api new hello
+
+goctl docker -go hello.go
+
+docker build -t hello:v1 -f service/hello/Dockerfile .
 ```
 
+## goctl kube
+
+``` shell
+goctl kube deploy -name redis -namespace adhoc -image redis:6-alpine -o redis.yaml -port 6379
+
+kubectl create namespace adhoc //Kubernetes 支持多个虚拟集群，它们底层依赖于同一个物理集群。 这些虚拟集群被称为命名空间。
+
+kubectl apply -f redis.yaml
+// 查看服务允许状态
+kubectl get all -n adhoc
+
+// 测试服务
+kubectl run -i --tty --rm cli --image=redis:6-alpine -n adhoc -- sh
+
+// redis-cli -h redis-svc
 ```
