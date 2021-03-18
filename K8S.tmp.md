@@ -54,8 +54,12 @@ $ minikube ssh
   #docker ps | awk '{print $2F}'
 $ kubectl config view
 $ kubectl get node -o wide
-  # 相当于用yaml 创建 一个deployment
+  # 相当于用yaml 创建 pod
 $ kubectl run goweb --image=hello  --port=8888 --replicas=3
+$ kubectl create deployment goweb --image=192.168.3.85:5000/netkiller/welcome:latest
+$ kubectl expose deployment goweb --port=8888 --target-port=8888 --type=NodePort
+$ minikube service welcome --url
+$ curl http://192.168.64.5:30257/from/you
 
 # 报错指南
 进入node节点去看
@@ -64,3 +68,34 @@ $ kubectl run goweb --image=hello  --port=8888 --replicas=3
 集群 节点 pod 服务
 
 
+
+# 宿主本地源
+
+``` json
+{
+  "insecure-registries" : [
+    "10.21.71.237:5000"
+  ],
+  "debug" : true
+}
+```
+
+```shell
+$ docker pull registry
+$ docker run -d -p 5000:5000 -v $(pwd):/var/lib/registry --restart always --name registry registry:2
+$ docker tag hello:v1 10.2.17.5:5000/hello-local
+
+```
+
+```
+minikube delete && minikube start --cpus=2 --memory=4096 --disk-size=10g \
+  --driver=hyperkit \
+  # --docker-env http_proxy=10.2.17.5:1087 \
+  # --docker-env https_proxy=10.2.17.5:1087 \
+  # --docker-env no_proxy=192.168.99.0/24 \
+  --registry-mirror=https://registry.docker-cn.com \
+  --insecure-registry=10.2.17.5:5000 \
+  --service-cluster-ip-range='10.10.0.0/24'
+```
+
+#https://zhuanlan.zhihu.com/p/261722859
