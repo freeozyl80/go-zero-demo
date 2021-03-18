@@ -24,6 +24,11 @@ pod 由 deployment（部署） 来进行管理
 ### 尝试使用kubernete 对象
 
 ``` shell
+
+$ kubectl config use-context docker-desktop
+
+
+
 $ goctl kube deploy -name nodejs -namespace keepfe -image ccr.ccs.tencentyun.com/keep/nodejs-build -o nodejs.yaml -port 6379
 $ kubectl create namespace keepfe
 $ kubectl apply -f nodejs.yaml
@@ -32,10 +37,14 @@ $ kubectl run -i --tty --rm cli --image=nodejs -n keepfe -- sh
 $ kubectl get pods -n keepfe
 $ kubectl get pods -n keepfe -o yaml 
 $ kubectl exec -it cli -n keepfe /bin/sh  #执行pod里面的 容器
+$ kubectl exec -ti <your-pod-name>  -n <your-namespace>  -- /bin/sh
 $ kubectl delete pod nodejs-577ccc9697-869j4 -n keepfe
 $ kubectl get deployment -n keepfe
 $ kubectl delete deployment nodejs -n keepfe
 
+
+# 查看日志
+$ kubectl -n default logs -f goweb
 ```
 
 minikube
@@ -45,6 +54,11 @@ $ minikube ssh
   #docker ps | awk '{print $2F}'
 $ kubectl config view
 $ kubectl get node -o wide
+  # 相当于用yaml 创建 一个deployment
+$ kubectl run goweb --image=hello  --port=8888 --replicas=3
+
+# 报错指南
+进入node节点去看
 ```
 
 集群 节点 pod 服务

@@ -99,6 +99,10 @@ goctl api new hello
 goctl docker -go hello.go
 
 docker build -t hello:v1 -f service/hello/Dockerfile .
+
+docker run --rm -it -p 8888:8888 hello:v1
+
+curl -i http://localhost:8888/from/you
 ```
 
 ## goctl kube
